@@ -53,23 +53,36 @@ def get_equation(p1, p2):
     else:
         return (p1.y - p2.y)/(p1.x - p2.x), p1.y - p1.x*(p1.y - p2.y)/(p1.x - p2.x)
 
-def intersect(s1, s2):
-    if ((s1.point1.y - s1.point2.y)/(s1.point1.x - s1.point2.x) == (s2.point1.y - s2.point2.y)/(s2.point1.x - s2.point2.x)):
-        return None
-    else:
-        m1, b1 = get_equation(s1.point1,s1.point2)
-        m2, b2 = get_equation(s2.point1, s2.point2)
-        a = Point((b2-b1)/(m1-m2),m1*(b2-b1)/(m1-m2) + b1)
-        if not (a.x <= max(s1.point1.x,s1.point2.x) and a.x >= min(s1.point1.x,s1.point2.x)):
-            return None
-        if not (a.y <= max(s1.point1.y,s1.point2.y) and a.y >= min(s1.point1.y,s1.point2.y)):
-            return None
-        if not (a.x <= max(s2.point1.x,s2.point2.x) and a.x >= min(s2.point1.x,s2.point2.x)):
-            return None
-        if not (a.y <= max(s2.point1.y,s2.point2.y) and a.y >= min(s2.point1.y,s2.point2.y)):
+def intersect(object1, object2):
+    if type(object1) == Segment and type(object2) == Segment:
+        if ((object1.point1.y - object1.point2.y)/(object1.point1.x - object1.point2.x) == (object2.point1.y - object2.point2.y)/(object2.point1.x - object2.point2.x)):
             return None
         else:
-            return a
+            m1, b1 = get_equation(object1.point1,object1.point2)
+            m2, b2 = get_equation(object2.point1, object2.point2)
+            a = Point((b2-b1)/(m1-m2),m1*(b2-b1)/(m1-m2) + b1)
+            if not (a.x <= max(object1.point1.x,object1.point2.x) and a.x >= min(object1.point1.x,object1.point2.x)):
+                return None
+            if not (a.y <= max(object1.point1.y,object1.point2.y) and a.y >= min(object1.point1.y,object1.point2.y)):
+                return None
+            if not (a.x <= max(object2.point1.x,object2.point2.x) and a.x >= min(object2.point1.x,object2.point2.x)):
+                return None
+            if not (a.y <= max(object2.point1.y,object2.point2.y) and a.y >= min(object2.point1.y,object2.point2.y)):
+                return None
+            else:
+                return a
+    elif type(object1) == Circle and type(object2) == Circle:
+
+
+    elif type(object1) == Segment and type(object2) == Circle:
+        return None
+
+    elif type(object1) == Circle and type(object2) == Segment:
+        return intersect(object2, object1)
+
+    else:
+        sys.exit("Invalid input!")
+
 
 
 
