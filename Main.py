@@ -1,5 +1,6 @@
 import turtle
 import sys
+import math
 
 class Point:
     def __init__(self, x, y):
@@ -52,6 +53,9 @@ def get_equation(p1, p2):
         return None, None
     else:
         return (p1.y - p2.y)/(p1.x - p2.x), p1.y - p1.x*(p1.y - p2.y)/(p1.x - p2.x)
+#Get distance between two points
+def dist(p1, p2):
+    return math.sqrt((p1.x-p2.x)**2 + (p1.y - p2.y)**2)
 
 def intersect(object1, object2):
     if type(object1) == Segment and type(object2) == Segment:
@@ -63,19 +67,86 @@ def intersect(object1, object2):
             a = Point((b2-b1)/(m1-m2),m1*(b2-b1)/(m1-m2) + b1)
             if not (a.x <= max(object1.point1.x,object1.point2.x) and a.x >= min(object1.point1.x,object1.point2.x)):
                 return None
-            if not (a.y <= max(object1.point1.y,object1.point2.y) and a.y >= min(object1.point1.y,object1.point2.y)):
-                return None
             if not (a.x <= max(object2.point1.x,object2.point2.x) and a.x >= min(object2.point1.x,object2.point2.x)):
-                return None
-            if not (a.y <= max(object2.point1.y,object2.point2.y) and a.y >= min(object2.point1.y,object2.point2.y)):
                 return None
             else:
                 return a
     elif type(object1) == Circle and type(object2) == Circle:
+        x1 = object1.center.x
+        x2 = object2.center.x
+        y1 = object1.center.y
+        y2 = object2.center.y
+        r1 = object1.radius
+        r2 = object2.radius
+        constant = x1**2 + y1**2 - x2**2 - y2**2 -r1**2 + r2**2
+        m = (2*x1-2*x2)/(2*y2 - 2*y1)
+        b = -constant/(2*y2 - 2*y1)
+        a = 1 + m**2
+        b1 = -2*x1 + 2*m*b - 2*y1*m
+        c = x1**2 + b**2 - 2*y1*b + y1**2 - r1**2
+        if math.sqrt(b1**2 - 4*a*c) < 0:
+            return None, None
+        if math.sqrt(b1**2 - 4*a*c) == 0:
+            x = -b1 / (2*a)
+            y = math.sqrt(r1**2 - (x-x1)**2)+y1
+            ypp = - math.sqrt(r1**2 - (x-x1)**2)+y1
+            point = Point(x,y)
+            point2 = Point(x,ypp)
+            if abs(dist(point, object1.center) - object1.radius) < 2 and abs(dist(point, object2.center) - object2.radius) < 2 :
+                return point, None
+            if abs(dist(point2, object1.center) - object1.radius) < 2 and abs(dist(point2, object2.center) - object2.radius) < 2 :
+                return point2, None
+        if math.sqrt(b1**2 - 4*a*c) > 0:
+            x = (-b1 + math.sqrt(b1**2 - 4*a*c))/(2*a)
+            y = math.sqrt(r1**2 - (x-x1)**2)+y1
+            yp = - math.sqrt(r1**2 - (x-x1)**2) + y1
+            xp = (-b1 - math.sqrt(b1**2 - 4*a*c))/(2*a)
+            ypp = math.sqrt(r1**2 - (xp-x1)**2)+y1
+            yppp = - math.sqrt(r1**2 - (xp-x1)**2)+y1
+            point = Point(x,y)
+            point1 = Point(x,yp)
+            point2 = Point(xp,ypp)
+            point3 = Point(xp, yppp)
+            if abs(dist(point,object1.center)-object1.radius)<2 and abs(dist(point,object2.center)-object2.radius)<2:
+                if abs(dist(point2,object1.center)-object1.radius)<2 and abs(dist(point2,object2.center)-object2.radius)<2:
+                    return point, point2
+                else:
+                    return point, point3
+            else:
+                if abs(dist(point2,object1.center)-object1.radius)<2 and abs(dist(point2,object2.center)-object2.radius)<2:
+                    return point1, point2
+                else:
+                    return point1, point3
 
 
     elif type(object1) == Segment and type(object2) == Circle:
-        return None
+        m, b = get_equation(object1.point1,object1.point2)
+        x1 = object2.center.x
+        y1 = object2.center.y
+        y2 = b - y1
+        a = m**2 + 1
+        b1 = -2*x1 + 2*m*y2
+        c = x1**2 + y2**2 - object2.radius ** 2
+        if math.sqrt(b1**2 - 4*a*c) < 0:
+            return None, None
+        if math.sqrt(b1**2 - 4*a*c) == 0:
+            x = -b1/(2*a)
+            y = m*x + b
+            if not(x <= max(object1.point1.x,object1.point2.x) and x >= min(object1.point1.x,object1.point2.x)):
+                return None, None
+            else:
+                return Point(x,y), None
+        else:
+            x = (-b1 + math.sqrt(b1**2 - 4*a*c))/(2*a)
+            y = m*x + b
+            xp = (-b1 - math.sqrt(b1**2 - 4*a*c))/(2*a)
+            yp = m*xp + b
+            if not(x <= max(object1.point1.x,object1.point2.x) and x >= min(object1.point1.x,object1.point2.x)):
+                return None, None
+            if not(xp <= max(object1.point1.x,object1.point2.x) and x >= min(object1.point1.x,object1.point2.x)):
+                return None, None
+            else:
+                return Point(x,y), Point(xp,yp)
 
     elif type(object1) == Circle and type(object2) == Segment:
         return intersect(object2, object1)
@@ -83,15 +154,12 @@ def intersect(object1, object2):
     else:
         sys.exit("Invalid input!")
 
-
-
-
-
-
 def main():
-    s1 = Segment(Point(0,2),Point(2,4))
-    s2 = Segment(Point(5,-21),Point(2,-3))
-    print(intersect(s1,s2))
+    c1 = Circle(Point(2,3),3)
+    c2 = Circle(Point(1,-1),4)
+    a,b = intersect(c1,c2)
+    print(a)
+    print(b)
 
 
 
