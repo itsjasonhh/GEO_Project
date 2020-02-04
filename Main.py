@@ -22,7 +22,7 @@ class Circle:
         return "Center: " + str(self.center) + ", radius = " + str(self.radius)
     def Draw(self):
         turtle.penup()
-        turtle.goto(self.center.x + self.radius, self.center.y)
+        turtle.goto(self.center.x, self.center.y)
         turtle.pendown()
         turtle.circle(self.radius)
         turtle.penup()
@@ -139,9 +139,14 @@ def main():
     c1 = Circle(Point(2,3),3)
     c2 = Circle(Point(1,-1),4)
     a,b = intersect(c1,c2)
+    c1.Draw()
+    c2.Draw()
+    a.Draw()
+    b.Draw()
     print(a)
     print(b)
 
 
-
 main()
+
+#having c2 be at (6,0) with radius 3 fails because of division. So gotta check cases like that? Or nah.
