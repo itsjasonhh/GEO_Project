@@ -88,36 +88,17 @@ def intersect(object1, object2):
             return None, None
         if math.sqrt(b1**2 - 4*a*c) == 0:
             x = -b1 / (2*a)
-            y = math.sqrt(r1**2 - (x-x1)**2)+y1
-            ypp = - math.sqrt(r1**2 - (x-x1)**2)+y1
+            y = m*x + b
             point = Point(x,y)
-            point2 = Point(x,ypp)
-            if abs(dist(point, object1.center) - object1.radius) < 2 and abs(dist(point, object2.center) - object2.radius) < 2 :
-                return point, None
-            if abs(dist(point2, object1.center) - object1.radius) < 2 and abs(dist(point2, object2.center) - object2.radius) < 2 :
-                return point2, None
+            return point, None
         if math.sqrt(b1**2 - 4*a*c) > 0:
             x = (-b1 + math.sqrt(b1**2 - 4*a*c))/(2*a)
-            y = math.sqrt(r1**2 - (x-x1)**2)+y1
-            yp = - math.sqrt(r1**2 - (x-x1)**2) + y1
+            y = m*x + b
             xp = (-b1 - math.sqrt(b1**2 - 4*a*c))/(2*a)
-            ypp = math.sqrt(r1**2 - (xp-x1)**2)+y1
-            yppp = - math.sqrt(r1**2 - (xp-x1)**2)+y1
+            yp = m*xp + b
             point = Point(x,y)
-            point1 = Point(x,yp)
-            point2 = Point(xp,ypp)
-            point3 = Point(xp, yppp)
-            if abs(dist(point,object1.center)-object1.radius)<2 and abs(dist(point,object2.center)-object2.radius)<2:
-                if abs(dist(point2,object1.center)-object1.radius)<2 and abs(dist(point2,object2.center)-object2.radius)<2:
-                    return point, point2
-                else:
-                    return point, point3
-            else:
-                if abs(dist(point2,object1.center)-object1.radius)<2 and abs(dist(point2,object2.center)-object2.radius)<2:
-                    return point1, point2
-                else:
-                    return point1, point3
-
+            point1 = Point(xp,yp)
+            return point, point1
 
     elif type(object1) == Segment and type(object2) == Circle:
         m, b = get_equation(object1.point1,object1.point2)
