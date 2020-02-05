@@ -22,7 +22,8 @@ class Circle:
         return "Center: " + str(self.center) + ", radius = " + str(self.radius)
     def Draw(self):
         turtle.penup()
-        turtle.goto(self.center.x, self.center.y)
+        turtle.goto(self.center.x + self.radius, self.center.y)
+        turtle.setheading(90)
         turtle.pendown()
         turtle.circle(self.radius)
         turtle.penup()
@@ -136,6 +137,7 @@ def intersect(object1, object2):
         sys.exit("Invalid input!")
 
 def main():
+    turtle.setworldcoordinates(-10,-10,10,10)
     c1 = Circle(Point(2,3),3)
     c2 = Circle(Point(1,-1),4)
     a,b = intersect(c1,c2)
