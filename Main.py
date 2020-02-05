@@ -25,7 +25,7 @@ class Circle:
         turtle.goto(self.center.x + self.radius, self.center.y)
         turtle.setheading(90)
         turtle.pendown()
-        turtle.circle(self.radius)
+        turtle.circle(self.radius,360,100)
         turtle.penup()
         turtle.hideturtle()
 
@@ -138,16 +138,22 @@ def intersect(object1, object2):
 
 def main():
     turtle.setworldcoordinates(-10,-10,10,10)
-    c1 = Circle(Point(2,3),3)
-    c2 = Circle(Point(1,-1),4)
-    a,b = intersect(c1,c2)
-    c1.Draw()
-    c2.Draw()
-    a.Draw()
-    b.Draw()
+    # c1 = Circle(Point(2,3),3)
+    # c2 = Circle(Point(1,-1),4)
+    # a,b = intersect(c1,c2)
+    # c1.Draw()
+    # c2.Draw()
+    # a.Draw()
+    # b.Draw()
+    # print(a)
+    # print(b)
+    s = Segment(Point(0,0),Point(1,1))
+    c = Circle(Point(5,5),1)
+    s.Draw()
+    c.Draw()
+    a, b = intersect(s,c)
     print(a)
     print(b)
-
 
 main()
 
