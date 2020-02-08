@@ -1,6 +1,9 @@
 import turtle
 import sys
 import math
+import parsley
+
+
 
 class Point:
     def __init__(self, x, y):
@@ -12,6 +15,7 @@ class Point:
         turtle.penup()
         turtle.goto(self.x,self.y)
         turtle.dot()
+        turtle.write(self.__str__())
         turtle.hideturtle()
 
 class Circle:
@@ -22,6 +26,9 @@ class Circle:
         return "Center: " + str(self.center) + ", radius = " + str(self.radius)
     def Draw(self):
         turtle.penup()
+        turtle.goto(self.center.x,self.center.y)
+        turtle.dot()
+        turtle.write(self.center)
         turtle.goto(self.center.x + self.radius, self.center.y)
         turtle.setheading(90)
         turtle.pendown()
@@ -40,9 +47,11 @@ class Segment:
         turtle.penup()
         turtle.goto(self.point1.x,self.point1.y)
         turtle.dot()
+        turtle.write(self.point1)
         turtle.pendown()
         turtle.goto(self.point2.x,self.point2.y)
         turtle.dot()
+        turtle.write(self.point2)
         turtle.penup()
         turtle.hideturtle()
 
@@ -138,15 +147,15 @@ def intersect(object1, object2):
 
 def main():
     turtle.setworldcoordinates(-10,-10,10,10)
-    # c1 = Circle(Point(2,3),3)
-    # c2 = Circle(Point(1,-1),4)
-    # a,b = intersect(c1,c2)
-    # c1.Draw()
-    # c2.Draw()
-    # a.Draw()
-    # b.Draw()
-    # print(a)
-    # print(b)
+    c1 = Circle(Point(2,3),3)
+    c2 = Circle(Point(1,-1),4)
+    a,b = intersect(c1,c2)
+    c1.Draw()
+    c2.Draw()
+    a.Draw()
+    b.Draw()
+    print(a)
+    print(b)
     s = Segment(Point(0,0),Point(1,1))
     c = Circle(Point(5,5),1)
     s.Draw()
@@ -154,6 +163,9 @@ def main():
     a, b = intersect(s,c)
     print(a)
     print(b)
+    #returns only ( because it's the last thing called for
+    pointParser = parsley.makeGrammar("Point = 'Point'+ '('",{})
+    print(pointParser("Point(").Point())
 
 main()
 
