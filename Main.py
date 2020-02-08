@@ -25,10 +25,7 @@ class Circle:
     def __str__(self):
         return "Center: " + str(self.center) + ", radius = " + str(self.radius)
     def Draw(self):
-        turtle.penup()
-        turtle.goto(self.center.x,self.center.y)
-        turtle.dot()
-        turtle.write(self.center)
+        self.center.Draw()
         turtle.goto(self.center.x + self.radius, self.center.y)
         turtle.setheading(90)
         turtle.pendown()
@@ -45,12 +42,10 @@ class Segment:
         return "Segment between " + str(self.point1) + " and " + str(self.point2)
     def Draw(self):
         turtle.penup()
-        turtle.goto(self.point1.x,self.point1.y)
-        turtle.dot()
-        turtle.write(self.point1)
+        self.point1.Draw()
         turtle.pendown()
         turtle.goto(self.point2.x,self.point2.y)
-        turtle.dot()
+        self.point2.Draw()
         turtle.write(self.point2)
         turtle.penup()
         turtle.hideturtle()
