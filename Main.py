@@ -6,11 +6,12 @@ import parsley
 
 
 class Point:
-    def __init__(self, x, y):
+    def __init__(self,name, x, y):
+        self.name = name
         self.x = x
         self.y = y
     def __str__(self):
-        return "(" + str(self.x) + ", " + str(self.y) + ")"
+        return self.name + "(" + str(self.x) + ", " + str(self.y) + ")"
     def Draw(self):
         turtle.penup()
         turtle.goto(self.x,self.y)
@@ -142,26 +143,15 @@ def intersect(object1, object2):
 
 def main():
     turtle.setworldcoordinates(-10,-10,10,10)
-    c1 = Circle(Point(2,3),3)
-    c2 = Circle(Point(1,-1),4)
-    a,b = intersect(c1,c2)
-    c1.Draw()
-    c2.Draw()
-    a.Draw()
-    b.Draw()
-    print(a)
-    print(b)
-    s = Segment(Point(0,0),Point(1,1))
-    c = Circle(Point(5,5),1)
-    s.Draw()
-    c.Draw()
-    a, b = intersect(s,c)
-    print(a)
-    print(b)
     #returns only ( because it's the last thing called for
-    pointParser = parsley.makeGrammar("Point = 'Point'+ '('",{})
-    print(pointParser("Point(").Point())
-
+    x = parsley.makeGrammar("""
+    digit = anything:c ?(c in '0123456789') -> c
+    number = <digit+>:ds -> int(ds)
+    """,{})
+    strn = x('032232').number()
+    print(strn)
+    Point('A',5,5).Draw()
+    Circle(Point('B',4,4),3).Draw()
 main()
 
 #having c2 be at (6,0) with radius 3 fails because of division. So gotta check cases like that? Or nah.
