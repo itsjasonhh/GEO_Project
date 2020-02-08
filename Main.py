@@ -142,16 +142,21 @@ def intersect(object1, object2):
         sys.exit("Invalid input!")
 
 def main():
-    turtle.setworldcoordinates(-10,-10,10,10)
+    #turtle.setworldcoordinates(-10,-10,10,10)
     #returns only ( because it's the last thing called for
-    x = parsley.makeGrammar("""
-    digit = anything:c ?(c in '0123456789') -> c
+    geoParser = parsley.makeGrammar("""
     number = <digit+>:ds -> int(ds)
+    figure = "Point" | "Circle" | "Segment"
+    whitespace = ' '*
+    char = anything:x ?(x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') -> x
+    figure = ("Point":structure whitespace char whitespace '(' whitespace number:x ',' number:y ')' -> (structure, x, y)
+            |"Circle":structure whitespace char:name whitespace 'at' whitespace '(' whitespace number:x ',' number:y ')' whitespace 'with' whitespace 'radius' whitespace number:radius -> (structure, name, x, y, radius)
+            |"Segment":structure whitespace char:first char:second -> (first, second)
+            )
     """,{})
-    strn = x('032232').number()
+    strn = geoParser("Segment AB").figure()
     print(strn)
-    Point('A',5,5).Draw()
-    Circle(Point('B',4,4),3).Draw()
+    
 main()
 
 #having c2 be at (6,0) with radius 3 fails because of division. So gotta check cases like that? Or nah.
