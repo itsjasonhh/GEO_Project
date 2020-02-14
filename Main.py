@@ -140,23 +140,27 @@ def intersect(object1, object2):
 
     else:
         sys.exit("Invalid input!")
-
-def main():
-    #turtle.setworldcoordinates(-10,-10,10,10)
-    #returns only ( because it's the last thing called for
-    geoParser = parsley.makeGrammar("""
-    number = <digit+>:ds -> int(ds)
-    figure = "Point" | "Circle" | "Segment"
-    whitespace = ' '*
-    char = anything:x ?(x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') -> x
-    figure = ("Point":structure whitespace char whitespace '(' whitespace number:x ',' number:y ')' -> (structure, x, y)
-            |"Circle":structure whitespace char:name whitespace 'at' whitespace '(' whitespace number:x ',' number:y ')' whitespace 'with' whitespace 'radius' whitespace number:radius -> (structure, name, x, y, radius)
-            |"Segment":structure whitespace char:first char:second -> (first, second)
+geoParser = parsley.makeGrammar("""
+    number = ('-' <digit+>:ds -> -int(ds)
+                |<digit+>:ds -> int(ds)
+                )
+    char = <letter>:x -> x
+    figure = ("Point" ws? char:p ws? '(' ws? number:x ws? ',' ws? number:y ws? ')' ws? -> Point(p,x,y)
+            |"Circle" ws? char:name ws? 'at' ws? '(' ws? number:x ws? ',' number:y ws? ')' ws? 'with' ws? 'radius' ws? number:radius ws? -> Circle(Point(name,x,y),radius)
+            |"Segment" ws? 'between' ws? char:a ws? '(' ws? number:x1 ws? ',' ws? number:y1 ws? ')' ws? 'and' ws? char:b ws? '(' ws? number:x2 ws? ',' ws? number:y2 ws? ')' -> Segment(Point(a,x1,y1),Point(b,x2,y2))
             )
-    """,{})
-    strn = geoParser("Segment AB").figure()
-    print(strn)
+    """,{
+    "Point": Point,
+    "Circle": Circle,
+    "Segment": Segment
+})
+def main():
+    turtle.setworldcoordinates(-10,-10,10,10)
+    a = geoParser("Segment between A(1,1) and B(2,5)").figure().Draw()
     
 main()
+#Syntax:
+#Point A (2,4)
+#Circle C at (2,4) with radiius 10
+#Segment between A(1,1) and B(2,5)
 
-#having c2 be at (6,0) with radius 3 fails because of division. So gotta check cases like that? Or nah.
