@@ -154,9 +154,40 @@ geoParser = parsley.makeGrammar("""
     "Circle": Circle,
     "Segment": Segment
 })
-def main():
+def drawCoordinatePlane():
+    #Draws axes
     turtle.setworldcoordinates(-10,-10,10,10)
+    turtle.penup()
+    turtle.setheading(90)
+    turtle.goto(0,-10)
+    turtle.pendown()
+    turtle.forward(20)
+    turtle.setheading(180)
+    turtle.penup()
+    turtle.goto(10,0)
+    turtle.pendown()
+    turtle.forward(20)
+    turtle.penup()
+    #Draws labels
+    for i in range(-10,11,1):
+        turtle.penup()
+        turtle.goto(i,-0.5)
+        turtle.setheading(90)
+        turtle.pendown()
+        turtle.forward(1)
+    for i in range(-10,11,1):
+        turtle.penup()
+        turtle.goto(-0.5, i)
+        turtle.setheading(0)
+        turtle.pendown()
+        turtle.forward(1)
+    turtle.hideturtle()
+
+
+def main():
+    drawCoordinatePlane()
     a = geoParser("Segment between A(1,1) and B(2,5)").figure().Draw()
+    turtle.exitonclick()
     
 main()
 #Syntax:
