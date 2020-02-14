@@ -157,6 +157,7 @@ geoParser = parsley.makeGrammar("""
 def drawCoordinatePlane():
     #Draws axes
     turtle.setworldcoordinates(-10,-10,10,10)
+    turtle.speed(0)
     turtle.penup()
     turtle.setheading(90)
     turtle.goto(0,-10)
@@ -186,7 +187,9 @@ def drawCoordinatePlane():
 
 def main():
     drawCoordinatePlane()
-    a = geoParser("Segment between A(1,1) and B(2,5)").figure().Draw()
+    a = geoParser("Segment between A(1,1) and B(-2,5)").figure()
+    a.Draw()
+    print(a)
     turtle.exitonclick()
     
 main()
@@ -194,4 +197,5 @@ main()
 #Point A (2,4)
 #Circle C at (2,4) with radiius 10
 #Segment between A(1,1) and B(2,5)
+#Equation A(1,1) B(6,3)
 
