@@ -145,9 +145,12 @@ geoParser = parsley.makeGrammar("""
                 |<digit+>:ds -> int(ds)
                 )
     char = <letter>:x -> x
-    figure = ("Point" ws? char:p ws? '(' ws? number:x ws? ',' ws? number:y ws? ')' ws? -> Point(p,x,y)
-            |"Circle" ws? char:name ws? 'at' ws? '(' ws? number:x ws? ',' number:y ws? ')' ws? 'with' ws? 'radius' ws? number:radius ws? -> Circle(Point(name,x,y),radius)
-            |"Segment" ws? 'between' ws? char:a ws? '(' ws? number:x1 ws? ',' ws? number:y1 ws? ')' ws? 'and' ws? char:b ws? '(' ws? number:x2 ws? ',' ws? number:y2 ws? ')' -> Segment(Point(a,x1,y1),Point(b,x2,y2))
+    point = "Point" ws? char:p ws? '(' ws? number:x ws? ',' ws? number:y ws? ')' ws? -> Point(p,x,y)
+    circle = "Circle" ws? 'at' point:p1 ws? 'with' ws? 'radius' ws? number:radius ws? -> Circle(p1,radius)
+    segment = "Segment" ws? 'between' ws? point:p1 ws? 'and' ws? point:p2 -> Segment(p1, p2)
+    figure = (point
+            | circle
+            | segment
             )
     """,{
     "Point": Point,
@@ -187,15 +190,13 @@ def drawCoordinatePlane():
 
 def main():
     drawCoordinatePlane()
-    a = geoParser("Circle A at (0,0) with radius 4").figure()
-    b = geoParser("Circle B at (3,3) with radius 6").figure()
+    a = geoParser("Circle at Point A(0,0) with radius 4").figure()
+    b = geoParser("Circle at Point B(3,3) with radius 6").figure()
     a.Draw()
     b.Draw()
     print(a)
     print(b)
-    a1=Circle(Point('A',0,0),4)
-    b1 = Circle(Point('B',3,3),6)
-    c,d = intersect(a1,b1)
+    c,d = intersect(a,b)
     c.Draw()
     d.Draw()
     turtle.exitonclick()
@@ -205,5 +206,4 @@ main()
 #Point A (2,4)
 #Circle C at (2,4) with radiius 10
 #Segment between A(1,1) and B(2,5)
-#Equation A(1,1) B(6,3)
 
