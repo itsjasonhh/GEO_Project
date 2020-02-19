@@ -53,6 +53,7 @@ class Segment:
 
 #returns two values: slope and y-intercept
 def get_equation(p1, p2):
+    Segment(p1,p2).Draw()
     if p1.x == p2.x and p1.y != p1.y:
         return None, None
     if p1.x == p2.x and p1.y == p2.y:
@@ -61,9 +62,12 @@ def get_equation(p1, p2):
         return (p1.y - p2.y)/(p1.x - p2.x), p1.y - p1.x*(p1.y - p2.y)/(p1.x - p2.x)
 #Get distance between two points
 def dist(p1, p2):
+    Segment(p1,p2).Draw()
     return math.sqrt((p1.x-p2.x)**2 + (p1.y - p2.y)**2)
 
 def intersect(object1, object2):
+    object1.Draw()
+    object2.Draw()
     if type(object1) == Segment and type(object2) == Segment:
         if ((object1.point1.y - object1.point2.y)/(object1.point1.x - object1.point2.x) == (object2.point1.y - object2.point2.y)/(object2.point1.x - object2.point2.x)):
             return None
@@ -152,10 +156,20 @@ geoParser = parsley.makeGrammar("""
             | circle
             | segment
             )
+    commands = ("Distance" ws? "between" ws? point:p1 ws? "and" ws? point:p2 ws? -> dist(p1,p2)
+                |"Equation" ws? "of" ws? segment:a ws? -> get_equation(a.point1,a.point2)
+                |"Intersection" ws? "of" ws? figure:f1 ws? "and" ws? figure:f2 ws? -> intersect(f1,f2)
+                
+    
+    )
     """,{
     "Point": Point,
     "Circle": Circle,
-    "Segment": Segment
+    "Segment": Segment,
+    "dist": dist,
+    "get_equation": get_equation,
+    "intersect": intersect
+
 })
 def drawCoordinatePlane():
     #Draws axes
@@ -190,17 +204,19 @@ def drawCoordinatePlane():
 
 def main():
     drawCoordinatePlane()
-    a = geoParser("Circle at Point A(0,0) with radius 4").figure()
-    b = geoParser("Circle at Point B(3,3) with radius 6").figure()
+    # a = geoParser("Circle at Point A(0,0) with radius 4").figure()
+    # b = geoParser("Circle at Point B(3,3) with radius 6").figure()
+    # s = geoParser("Segment between Point A(0,0) and Point B(3,3)").figure()
+    # a.Draw()
+    # b.Draw()
+    # c,d = intersect(a,b)
+    # c.Draw()
+    # d.Draw()
+    # s.Draw()
+    a,b = geoParser("Intersection of Circle at Point A(2,3) with radius 3 and Circle at Point B(1, -1) with radius 4").commands()
     a.Draw()
     b.Draw()
-    print(a)
-    print(b)
-    c,d = intersect(a,b)
-    c.Draw()
-    d.Draw()
     turtle.exitonclick()
-    
 main()
 #Syntax:
 #Point A (2,4)
