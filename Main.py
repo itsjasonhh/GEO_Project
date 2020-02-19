@@ -70,7 +70,7 @@ def intersect(object1, object2):
         else:
             m1, b1 = get_equation(object1.point1,object1.point2)
             m2, b2 = get_equation(object2.point1, object2.point2)
-            a = Point((b2-b1)/(m1-m2),m1*(b2-b1)/(m1-m2) + b1)
+            a = Point('P1',(b2-b1)/(m1-m2),m1*(b2-b1)/(m1-m2) + b1)
             if not (a.x <= max(object1.point1.x,object1.point2.x) and a.x >= min(object1.point1.x,object1.point2.x)):
                 return None
             if not (a.x <= max(object2.point1.x,object2.point2.x) and a.x >= min(object2.point1.x,object2.point2.x)):
@@ -95,15 +95,15 @@ def intersect(object1, object2):
         if math.sqrt(b1**2 - 4*a*c) == 0:
             x = -b1 / (2*a)
             y = m*x + b
-            point = Point(x,y)
+            point = Point('P1',x,y)
             return point, None
         if math.sqrt(b1**2 - 4*a*c) > 0:
             x = (-b1 + math.sqrt(b1**2 - 4*a*c))/(2*a)
             y = m*x + b
             xp = (-b1 - math.sqrt(b1**2 - 4*a*c))/(2*a)
             yp = m*xp + b
-            point = Point(x,y)
-            point1 = Point(xp,yp)
+            point = Point('P1',x,y)
+            point1 = Point('P2',xp,yp)
             return point, point1
 
     elif type(object1) == Segment and type(object2) == Circle:
@@ -122,7 +122,7 @@ def intersect(object1, object2):
             if not(x <= max(object1.point1.x,object1.point2.x) and x >= min(object1.point1.x,object1.point2.x)):
                 return None, None
             else:
-                return Point(x,y), None
+                return Point('P1',x,y), None
         else:
             x = (-b1 + math.sqrt(b1**2 - 4*a*c))/(2*a)
             y = m*x + b
@@ -133,7 +133,7 @@ def intersect(object1, object2):
             if not(xp <= max(object1.point1.x,object1.point2.x) and x >= min(object1.point1.x,object1.point2.x)):
                 return None, None
             else:
-                return Point(x,y), Point(xp,yp)
+                return Point('P1',x,y), Point('P2',xp,yp)
 
     elif type(object1) == Circle and type(object2) == Segment:
         return intersect(object2, object1)
@@ -187,9 +187,17 @@ def drawCoordinatePlane():
 
 def main():
     drawCoordinatePlane()
-    a = geoParser("Segment between A(1,1) and B(-2,5)").figure()
+    a = geoParser("Circle A at (0,0) with radius 4").figure()
+    b = geoParser("Circle B at (3,3) with radius 6").figure()
     a.Draw()
+    b.Draw()
     print(a)
+    print(b)
+    a1=Circle(Point('A',0,0),4)
+    b1 = Circle(Point('B',3,3),6)
+    c,d = intersect(a1,b1)
+    c.Draw()
+    d.Draw()
     turtle.exitonclick()
     
 main()
