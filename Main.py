@@ -11,7 +11,7 @@ class Point:
         self.x = x
         self.y = y
     def __str__(self):
-        return self.name + "(" + str(self.x) + ", " + str(self.y) + ")"
+        return self.name + "(" + str(round(self.x,4)) + ", " + str(round(self.y,4)) + ")"
     def Draw(self):
         turtle.penup()
         turtle.goto(self.x,self.y)
@@ -61,16 +61,16 @@ def get_equation(p1, p2):
     else:
         m, b = (p1.y - p2.y)/(p1.x - p2.x), p1.y - p1.x*(p1.y - p2.y)/(p1.x - p2.x)
         turtle.up()
-        turtle.goto(-8,-13)
-        turtle.write("y = " + str(m) + "x + " + str(b),False,"left",("Arial",24,"normal"))
+        turtle.goto(-13,-13)
+        turtle.write("y = " + str(m) + "x + " + str(b),False,"left",("Arial",17,"normal"))
         return
 #Get distance between two points
 def dist(p1, p2):
     Segment(p1,p2).Draw()
     turtle.up()
-    turtle.goto(-8,-13)
+    turtle.goto(-13,-13)
     a = math.sqrt((p1.x-p2.x)**2 + (p1.y - p2.y)**2)
-    turtle.write("Distance = " + str(a),False,"left",("Arial",24,"normal"))
+    turtle.write("Distance = " + str(a),False,"left",("Arial",17,"normal"))
     return
 
 def intersect(object1, object2):
@@ -79,8 +79,8 @@ def intersect(object1, object2):
     if type(object1) == Segment and type(object2) == Segment:
         if ((object1.point1.y - object1.point2.y)/(object1.point1.x - object1.point2.x) == (object2.point1.y - object2.point2.y)/(object2.point1.x - object2.point2.x)):
             turtle.up()
-            turtle.goto(-8,-13)
-            turtle.write("No intersection points!",False,"left",("Arial",24,"normal"))
+            turtle.goto(-13,-13)
+            turtle.write("No intersection points!",False,"left",("Arial",17,"normal"))
             return
         else:
             m1, b1 = get_equation(object1.point1,object1.point2)
@@ -88,19 +88,19 @@ def intersect(object1, object2):
             a = Point('P1',(b2-b1)/(m1-m2),m1*(b2-b1)/(m1-m2) + b1)
             if not (a.x <= max(object1.point1.x,object1.point2.x) and a.x >= min(object1.point1.x,object1.point2.x)):
                 turtle.up()
-                turtle.goto(-8,-13)
-                turtle.write("No intersection points!",False,"left",("Arial",24,"normal"))
+                turtle.goto(-13,-13)
+                turtle.write("No intersection points!",False,"left",("Arial",17,"normal"))
                 return
             if not (a.x <= max(object2.point1.x,object2.point2.x) and a.x >= min(object2.point1.x,object2.point2.x)):
                 turtle.up()
-                turtle.goto(-8,-13)
-                turtle.write("No intersection points!",False,"left",("Arial",24,"normal"))
+                turtle.goto(-13,-13)
+                turtle.write("No intersection points!",False,"left",("Arial",17,"normal"))
                 return
             else:
                 a.Draw()
                 turtle.up()
-                turtle.goto(-8,-13)
-                turtle.write("Intersection at " + str(a),False,"left",("Arial",24,"normal"))
+                turtle.goto(-13,-13)
+                turtle.write("Intersection at " + str(a),False,"left",("Arial",17,"normal"))
                 return
     elif type(object1) == Circle and type(object2) == Circle:
         x1 = object1.center.x
@@ -117,8 +117,8 @@ def intersect(object1, object2):
         c = x1**2 + b**2 - 2*y1*b + y1**2 - r1**2
         if math.sqrt(b1**2 - 4*a*c) < 0:
             turtle.up()
-            turtle.goto(-8,-13)
-            turtle.write("No intersection points!",False,"left",("Arial",24,"normal"))
+            turtle.goto(-13,-13)
+            turtle.write("No intersection points!",False,"left",("Arial",17,"normal"))
             return
         if math.sqrt(b1**2 - 4*a*c) == 0:
             x = -b1 / (2*a)
@@ -126,8 +126,8 @@ def intersect(object1, object2):
             point = Point('P1',x,y)
             point.Draw()
             turtle.up()
-            turtle.goto(-8,-13)
-            turtle.write("Intersection at " + str(point),False,"left",("Arial",24,"normal"))
+            turtle.goto(-13,-13)
+            turtle.write("Intersection at " + str(point),False,"left",("Arial",17,"normal"))
             return
         if math.sqrt(b1**2 - 4*a*c) > 0:
             x = (-b1 + math.sqrt(b1**2 - 4*a*c))/(2*a)
@@ -139,8 +139,8 @@ def intersect(object1, object2):
             point.Draw()
             point1.Draw()
             turtle.up()
-            turtle.goto(-8,-13)
-            turtle.write("Intersections at " + str(point) + " and " + str(point1),False,"left",("Arial",24,"normal"))
+            turtle.goto(-13,-13)
+            turtle.write("Intersections at " + str(point) + " and " + str(point1),False,"left",("Arial",17,"normal"))
             return
     elif type(object1) == Segment and type(object2) == Circle:
         m, b = get_equation(object1.point1,object1.point2)
@@ -152,8 +152,8 @@ def intersect(object1, object2):
         c = x1**2 + y2**2 - object2.radius ** 2
         if math.sqrt(b1**2 - 4*a*c) < 0:
             turtle.up()
-            turtle.goto(-8,-13)
-            turtle.write("No intersection points!",False,"left",("Arial",24,"normal"))
+            turtle.goto(-13,-13)
+            turtle.write("No intersection points!",False,"left",("Arial",17,"normal"))
             return
         if math.sqrt(b1**2 - 4*a*c) == 0:
             x = -b1/(2*a)
@@ -164,8 +164,8 @@ def intersect(object1, object2):
                 p1 = Point('P1',x,y)
                 p1.Draw()
                 turtle.up()
-                turtle.goto(-8,-13)
-                turtle.write("Intersection at " + str(p1) ,False,"left",("Arial",24,"normal"))
+                turtle.goto(-13,-13)
+                turtle.write("Intersection at " + str(p1) ,False,"left",("Arial",17,"normal"))
                 return
         else:
             x = (-b1 + math.sqrt(b1**2 - 4*a*c))/(2*a)
@@ -180,8 +180,8 @@ def intersect(object1, object2):
                 p1 = Point('P1',x,y)
                 p2 = Point('P2',xp,yp)
                 turtle.up()
-                turtle.goto(-8,-13)
-                turtle.write("Intersections at " + str(p1) + " and " + str(p2),False,"left",("Arial",24,"normal"))
+                turtle.goto(-13,-13)
+                turtle.write("Intersections at " + str(p1) + " and " + str(p2),False,"left",("Arial",17,"normal"))
                 return
 
     elif type(object1) == Circle and type(object2) == Segment:
@@ -218,7 +218,7 @@ geoParser = parsley.makeGrammar("""
 })
 def drawCoordinatePlane():
     #Draws axes
-    turtle.setworldcoordinates(-10,-15,11,11)
+    turtle.setworldcoordinates(-15,-15,15,15)
     turtle.speed(0)
     turtle.penup()
     turtle.setheading(90)
@@ -249,20 +249,8 @@ def drawCoordinatePlane():
 
 def main():
     drawCoordinatePlane()
-    # a = geoParser("Circle at Point A(0,0) with radius 4").figure()
-    # b = geoParser("Circle at Point B(3,3) with radius 6").figure()
-    # s = geoParser("Segment between Point A(0,0) and Point B(3,3)").figure()
-    # a.Draw()
-    # b.Draw()
-    # c,d = intersect(a,b)
-    # c.Draw()
-    # d.Draw()
-    # s.Draw()
     a = geoParser("Intersection of Circle at Point A(2,3) with radius 3  and Circle at Point B(1,-1) with radius 4").commands()
     turtle.exitonclick()
 main()
-#Syntax:
-#Point A (2,4)
-#Circle C at (2,4) with radiius 10
-#Segment between A(1,1) and B(2,5)
+
 
