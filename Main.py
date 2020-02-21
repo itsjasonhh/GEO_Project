@@ -102,6 +102,46 @@ def length(s):
 def intersect(object1, object2):
     object1.Draw()
     object2.Draw()
+    if type(object1) == Point and type(object2) == Point:
+        if object1.x == object2.x and object1.y == object2.y:
+            turtle.up()
+            turtle.goto(-13,-13)
+            turtle.write("Intersection at " + str(object1),False,"left",("Arial",17,"normal"))
+        else:
+            turtle.up()
+            turtle.goto(-13,-13)
+            turtle.write("No intersection points!",False,"left",("Arial",17,"normal"))
+    if type(object1) == Point and type(object2) == Segment:
+        m = (object2.point1.y - object2.point2.y)/(object2.point1.x - object2.point2.x)
+        b = object2.point1.y - m*object2.point1.x
+        if object1.y != m * object1.x + b:
+            turtle.up()
+            turtle.goto(-13,-13)
+            turtle.write("No intersection points!",False,"left",("Arial",17,"normal"))
+        else:
+            if object1.x <= max(object2.point1.x,object2.point2.x) and object1.x >= min(object2.point1.x,object2.point2.x):
+                turtle.up()
+                turtle.goto(-13,-13)
+                turtle.write("Intersection at " + str(object1),False,"left",("Arial",17,"normal"))
+            else:
+                turtle.up()
+                turtle.goto(-13,-13)
+                turtle.write("No intersection points!",False,"left",("Arial",17,"normal"))
+    if type(object1) == Segment and type(object2) == Point:
+        return intersect(object2,object1)
+
+    if type(object1) == Point and type(object2) == Circle:
+        a = math.sqrt((object1.x - object2.center.x)**2 + (object1.y - object2.center.y)**2)
+        if a == object2.radius:
+            turtle.up()
+            turtle.goto(-13,-13)
+            turtle.write("Intersection at " + str(object1),False,"left",("Arial",17,"normal"))
+        else:
+            turtle.up()
+            turtle.goto(-13,-13)
+            turtle.write("No intersection points!",False,"left",("Arial",17,"normal"))
+    if type(object1) == Circle and type(object2) == Point:
+        return intersect(object2, object1)
     if type(object1) == Segment and type(object2) == Segment:
         if ((object1.point1.y - object1.point2.y)/(object1.point1.x - object1.point2.x) == (object2.point1.y - object2.point2.y)/(object2.point1.x - object2.point2.x)):
             turtle.up()
@@ -128,7 +168,7 @@ def intersect(object1, object2):
                 turtle.goto(-13,-13)
                 turtle.write("Intersection at " + str(a),False,"left",("Arial",17,"normal"))
                 return
-    elif type(object1) == Circle and type(object2) == Circle:
+    if type(object1) == Circle and type(object2) == Circle:
         x1 = object1.center.x
         x2 = object2.center.x
         y1 = object1.center.y
@@ -168,7 +208,7 @@ def intersect(object1, object2):
             turtle.goto(-13,-13)
             turtle.write("Intersections at " + str(point) + " and " + str(point1),False,"left",("Arial",17,"normal"))
             return
-    elif type(object1) == Segment and type(object2) == Circle:
+    if type(object1) == Segment and type(object2) == Circle:
         m, b = (object1.point1.y - object1.point2.y)/(object1.point1.x - object1.point2.x), object1.point1.y - object1.point1.x*(object1.point1.y - object1.point2.y)/(object1.point1.x - object1.point2.x)
         x1 = object2.center.x
         y1 = object2.center.y
@@ -221,11 +261,9 @@ def intersect(object1, object2):
                 turtle.write("Intersections at " + str(p1) + " and " + str(p2),False,"left",("Arial",17,"normal"))
                 return
 
-    elif type(object1) == Circle and type(object2) == Segment:
+    if type(object1) == Circle and type(object2) == Segment:
         return intersect(object2, object1)
 
-    else:
-        sys.exit("Invalid input!")
 geoParser = parsley.makeGrammar("""
     number = ('-' <digit+>:ds -> -int(ds)
                 |<digit+>:ds -> int(ds)
@@ -288,7 +326,7 @@ def main():
     drawCoordinatePlane()
     #a = geoParser("Intersection of Circle at Point A(2,3) with radius 3  and Circle at Point B(1,-1) with radius 4").commands()
     #b = geoParser("Intersection of Segment between Point A(-10,5) and Point B(10,5) and Circle at Point C(0,0) with radius 5").commands()
-    a = geoParser("Length of Circle at Point A(2,3) with radius 10").commands()
+    a = geoParser("Intersection of Point A (-3,-3) and Segment between Point B(-10,-10) and Point C (-6, -6)").commands()
     turtle.exitonclick()
 main()
 
