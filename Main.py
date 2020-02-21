@@ -51,25 +51,31 @@ class Segment:
         turtle.penup()
         turtle.hideturtle()
 
-#Draw line and equation of line
+#Draw line and equation of line or circle
 def get_equation(s):
     s.Draw()
-    if s.point1.x == s.point2.x and s.point1.y != s.point2.y:
+    if type(s) == Segment:
+        if s.point1.x == s.point2.x and s.point1.y != s.point2.y:
+            turtle.up()
+            turtle.goto(-13,-13)
+            turtle.write("Error: vertical line!",False,"left",("Arial",17,"normal"))
+            return
+        if s.point1.x == s.point2.x and s.point1.y == s.point2.y:
+            turtle.up()
+            turtle.goto(-13,-13)
+            turtle.write("Same point!",False,"left",("Arial",17,"normal"))
+            return
+        else:
+            m, b = (s.point1.y - s.point2.y)/(s.point1.x - s.point2.x), s.point1.y - s.point1.x*(s.point1.y - s.point2.y)/(s.point1.x - s.point2.x)
+            turtle.up()
+            turtle.goto(-13,-13)
+            turtle.write("y = " + str(m) + "x + " + str(b),False,"left",("Arial",17,"normal"))
+            return
+
+    if type(s) == Circle:
         turtle.up()
         turtle.goto(-13,-13)
-        turtle.write("Error: vertical line!",False,"left",("Arial",17,"normal"))
-        return
-    if s.point1.x == s.point2.x and s.point1.y == s.point2.y:
-        turtle.up()
-        turtle.goto(-13,-13)
-        turtle.write("Same point!",False,"left",("Arial",17,"normal"))
-        return
-    else:
-        m, b = (s.point1.y - s.point2.y)/(s.point1.x - s.point2.x), s.point1.y - s.point1.x*(s.point1.y - s.point2.y)/(s.point1.x - s.point2.x)
-        turtle.up()
-        turtle.goto(-13,-13)
-        turtle.write("y = " + str(m) + "x + " + str(b),False,"left",("Arial",17,"normal"))
-        return
+        turtle.write("(x - " + str(s.center.x) + ")^2 + (y - " + str(s.center.y) + ") ^2 = " + str(s.radius**2),False,"left",("Arial",17,"normal"))
 #Draw line segment and length of segment
 def length(s):
     s.Draw()
@@ -219,7 +225,7 @@ geoParser = parsley.makeGrammar("""
             | segment
             )
     commands = ("Length" ws? "of" ws? segment:s ws? -> length(s)
-                |"Equation" ws? "of" ws? segment:a ws? -> get_equation(a)
+                |"Equation" ws? "of" ws? figure:a ws? -> get_equation(a)
                 |"Intersection" ws? "of" ws? figure:f1 ws? "and" ws? figure:f2 ws? -> intersect(f1,f2)
                 
     
@@ -267,7 +273,8 @@ def drawCoordinatePlane():
 def main():
     drawCoordinatePlane()
     #a = geoParser("Intersection of Circle at Point A(2,3) with radius 3  and Circle at Point B(1,-1) with radius 4").commands()
-    b = geoParser("Intersection of Segment between Point A(-10,5) and Point B(10,5) and Circle at Point C(0,0) with radius 5").commands()
+    #b = geoParser("Intersection of Segment between Point A(-10,5) and Point B(10,5) and Circle at Point C(0,0) with radius 5").commands()
+    a = geoParser("Equation of Circle at Point A(2,3) with radius 3").commands()
     turtle.exitonclick()
 main()
 
